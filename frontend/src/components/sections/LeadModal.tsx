@@ -15,8 +15,6 @@ export function LeadModal({ open, onClose }: LeadModalProps) {
 
   const [clinicName, setClinicName] = useState('');
   const [clinicLink, setClinicLink] = useState('');
-  const [city, setCity] = useState('');
-  const [clinicsCount, setClinicsCount] = useState('');
   const [contact, setContact] = useState('');
 
   useEffect(() => {
@@ -44,8 +42,6 @@ export function LeadModal({ open, onClose }: LeadModalProps) {
       await submitLead({
         clinic_name: clinicName,
         clinic_link: clinicLink || undefined,
-        city: city || undefined,
-        clinics_count: clinicsCount || undefined,
         contact,
       });
       setSent(true);
@@ -80,10 +76,6 @@ export function LeadModal({ open, onClose }: LeadModalProps) {
                 value={clinicName} onChange={setClinicName} required />
               <Field label="Ссылка на клинику" placeholder="Сайт или карточка на Яндекс Картах"
                 value={clinicLink} onChange={setClinicLink} icon="map-pin" />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-                <Field label="Город" placeholder="Казань" value={city} onChange={setCity} />
-                <Field label="Клиник в сети" placeholder="5" value={clinicsCount} onChange={setClinicsCount} />
-              </div>
               <Field label="Контакт для связи" placeholder="Telegram или телефон"
                 value={contact} onChange={setContact} icon="phone" required />
             </div>

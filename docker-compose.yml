@@ -44,8 +44,20 @@ services:
     volumes:
       - ./nginx:/etc/nginx/templates:ro
       - ./certs:/etc/nginx/certs:ro
+      - certbot-www:/var/www/certbot:ro
     depends_on:
       - backend
 
+  # Запускается по требованию (profile "certs"), не вместе со стеком:
+  #   выпуск:    docker compose run --rm certbot certonly --webroot -w /var/www/certbot -d $DOMAIN --email you@mail.ru --agree-tos --no-eff-email
+  #   продление: docker compose run --rm certbot renew && docker compose exec nginx nginx -s reload
+  certbot:
+    image: certbot/certbot
+    profiles: ["certs"]
+    volumes:
+      - ./certs:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+
 volumes:
   pgdata:
+  certbot-www:

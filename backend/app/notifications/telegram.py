@@ -18,8 +18,14 @@ def _format_lead_message(lead: Lead) -> str:
         "",
         f"<b>Клиника:</b> {esc(lead.clinic_name)}",
         f"<b>Ссылка:</b> {esc(lead.clinic_link)}",
-        f"<b>Город:</b> {esc(lead.city)}",
-        f"<b>Клиник в сети:</b> {esc(lead.clinics_count)}",
+    ]
+    # необязательные поля показываем, только если заполнены (в форме их сейчас нет,
+    # но API их по-прежнему принимает)
+    if lead.city:
+        lines.append(f"<b>Город:</b> {esc(lead.city)}")
+    if lead.clinics_count:
+        lines.append(f"<b>Клиник в сети:</b> {esc(lead.clinics_count)}")
+    lines += [
         f"<b>Контакт:</b> {esc(lead.contact)}",
         "",
         f"#lead_{lead.id} · {lead.created_at:%d.%m.%Y %H:%M} UTC",

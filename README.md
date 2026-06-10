@@ -35,14 +35,29 @@ Health check бэкенда — `GET /api/health`.
 | `PROXY_URL` | прокси для Telegram API: `http://host:port` или `socks5://host:port` |
 | `PROXY_LOGIN / PROXY_PASSWORD` | авторизация прокси |
 
-## SSL
+## SSL через certbot (Let's Encrypt)
 
-1. Положите сертификаты в `certs/`: `fullchain.pem` и `privkey.pem`.
-2. `cp nginx/ssl.conf.example nginx/ssl.conf.template`
-3. `docker compose up -d --force-recreate nginx`
+ACME-челлендж уже обслуживается nginx-ом (`/.well-known/acme-challenge/` смотрит
+в общий volume `certbot-www`), сервис `certbot` описан в compose под profile
+`certs` и не стартует вместе со стеком.
 
-Для Let's Encrypt: в HTTP-конфиге уже есть локация `/.well-known/acme-challenge/`
-под `certbot --webroot`.
+1. В `.env` поставьте реальный `DOMAIN`, перезапустите nginx:
+   `docker compose up -d --force-recreate nginx`
+2. Выпустите сертификат:
+   ```bash
+   docker compose run --rm certbot certonly --webroot -w /var/www/certbot \
+     -d ваш-домен.ru --email you@mail.ru --agree-tos --no-eff-email
+   ```
+   Сертификаты лягут в `./certs/live/<домен>/`.
+3. Включите HTTPS-конфиг и перезапустите nginx:
+   ```bash
+   cp nginx/ssl.conf.example nginx/ssl.conf.template
+   docker compose up -d --force-recreate nginx
+   ```
+4. Продление (cron раз в неделю):
+   ```bash
+   docker compose run --rm certbot renew && docker compose exec nginx nginx -s reload
+   ```
 
 ## Разработка без докера
 
