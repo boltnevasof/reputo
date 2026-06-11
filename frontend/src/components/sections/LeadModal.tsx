@@ -89,7 +89,7 @@ export function LeadModal({ open, onClose }: LeadModalProps) {
             </Button>
             <p style={{ fontSize: 12, color: 'var(--ink-400)', textAlign: 'center', marginTop: 14 }}>
               Нажимая кнопку, вы соглашаетесь с{' '}
-              <a href="/privacy" target="_blank" rel="noopener" style={{ color: 'var(--ink-500)', textDecoration: 'underline' }}>
+              <a href="/privacy.html" target="_blank" rel="noopener" style={{ color: 'var(--ink-500)', textDecoration: 'underline' }}>
                 политикой конфиденциальности
               </a>
             </p>

@@ -63,8 +63,8 @@ export function Footer() {
           paddingTop: 24, borderTop: '1px solid var(--line)', flexWrap: 'wrap', gap: 12 }}>
           <span style={{ fontSize: 13, color: 'var(--ink-400)' }}>© 2026 Reputo. Все права защищены.</span>
           <div style={{ display: 'flex', gap: 24 }}>
-            <a className="nav-link" href="/privacy" target="_blank" rel="noopener" style={{ fontSize: 13 }}>Политика конфиденциальности</a>
-            <a className="nav-link" href="/oferta" target="_blank" rel="noopener" style={{ fontSize: 13 }}>Договор-оферта</a>
+            <a className="nav-link" href="/privacy.html" target="_blank" rel="noopener" style={{ fontSize: 13 }}>Политика конфиденциальности</a>
+            <a className="nav-link" href="/oferta.html" target="_blank" rel="noopener" style={{ fontSize: 13 }}>Договор-оферта</a>
           </div>
         </div>
       </div>

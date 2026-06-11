@@ -223,5 +223,3 @@ node_modules/
 dist/
 __pycache__/
 *.pyc
-certs/*.pem
-nginx/ssl.conf.template

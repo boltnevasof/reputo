@@ -17,6 +17,10 @@ services:
   backend:
     build: ./backend
     restart: unless-stopped
+    ports:
+      # только на localhost: наружу API выходит через системный nginx сервера.
+      # 8001 занят trend-trade-back, поэтому дефолт 8002.
+      - "127.0.0.1:${BACKEND_PORT:-8002}:8000"
     environment:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
@@ -33,33 +37,5 @@ services:
       db:
         condition: service_healthy
 
-  nginx:
-    build: ./frontend
-    restart: unless-stopped
-    ports:
-      # 80/443 на сервере занимает системный nginx (он же терминирует SSL для
-      # trend-trade). Дефолты смещены, чтобы проекты не конфликтовали.
-      - "${HTTP_PORT:-8080}:80"
-      - "${HTTPS_PORT:-8443}:443"
-    environment:
-      DOMAIN: ${DOMAIN}
-    volumes:
-      - ./nginx:/etc/nginx/templates:ro
-      - ./certs:/etc/nginx/certs:ro
-      - certbot-www:/var/www/certbot:ro
-    depends_on:
-      - backend
-
-  # Запускается по требованию (profile "certs"), не вместе со стеком:
-  #   выпуск:    docker compose run --rm certbot certonly --webroot -w /var/www/certbot -d $DOMAIN --email you@mail.ru --agree-tos --no-eff-email
-  #   продление: docker compose run --rm certbot renew && docker compose exec nginx nginx -s reload
-  certbot:
-    image: certbot/certbot
-    profiles: ["certs"]
-    volumes:
-      - ./certs:/etc/letsencrypt
-      - certbot-www:/var/www/certbot
-
 volumes:
   pgdata:
-  certbot-www:
