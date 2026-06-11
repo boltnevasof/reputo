@@ -2,8 +2,9 @@
 
 Лендинг Reputo (React + TypeScript + Vite) с бэкендом на FastAPI: заявки с формы
 сохраняются в Postgres, уведомление о каждой заявке приходит в Telegram-бота
-(через прокси). В docker compose подняты только **база и бэкенд** — статику
-фронта и SSL обслуживает системный nginx сервера (его конфиги ведутся отдельно).
+(через прокси). Docker compose поднимает **базу, бэкенд и фронт** (статика в
+лёгком nginx-контейнере). SSL и домены обслуживает системный nginx сервера —
+его конфиги и certbot ведутся отдельно, вне репозитория.
 
 ## Структура
 
@@ -12,37 +13,32 @@ frontend/   — лендинг: Vite + React + TS (src/components: ui / charts /
 backend/    — FastAPI: app/leads (router, schemas, models, service), app/notifications
 ```
 
-## Запуск бэкенда
+## Запуск
 
 ```bash
 cp .env.example .env      # заполнить переменные
 docker compose up -d --build
 ```
 
-API доступен на `127.0.0.1:8002` (порт меняется через `BACKEND_PORT`).
-Health check — `GET /api/health`.
+- Сайт целиком — `127.0.0.1:5002` (фронт-контейнер, `/api` проксируется на бэкенд внутри compose-сети).
+- API напрямую — `127.0.0.1:8002`, health check — `GET /api/health`.
+- Порты меняются через `FRONTEND_PORT` / `BACKEND_PORT`.
 
-## Сборка фронта
-
-```bash
-cd frontend && npm install && npm run build
-```
-
-Готовая статика — в `frontend/dist/`. Системный nginx сервера раздаёт эту папку
-и проксирует `/api/` на `127.0.0.1:8002`. Страницы документов лежат в статике
-как `/privacy.html` и `/oferta.html`.
+Системному nginx сервера достаточно проксировать весь трафик домена на
+`127.0.0.1:5002` (или отдельно `/api/` → `127.0.0.1:8002`).
 
 ## Разработка
 
 ```bash
-docker compose up -d           # база + бэкенд на :8002
-cd frontend && npm run dev     # vite dev server, /api проксируется на :8002
+docker compose up -d           # база + бэкенд (+ фронт-контейнер)
+cd frontend && npm run dev     # vite dev server на :5173, /api проксируется на :8002
 ```
 
 ## Переменные окружения (.env)
 
 | Переменная | Что это |
 |---|---|
+| `FRONTEND_PORT` | порт сайта на хосте (дефолт 5002; 5000/5001 заняты trend-trade-front) |
 | `BACKEND_PORT` | порт API на хосте (дефолт 8002; 8001 занят trend-trade-back) |
 | `POSTGRES_USER / PASSWORD / DB` | доступы к базе |
 | `TELEGRAM_BOT_TOKEN` | токен бота от @BotFather |
@@ -58,6 +54,7 @@ cd frontend && npm run dev     # vite dev server, /api проксируется 
 | 80 / 443 | системный nginx |
 | 5000 / 5001 | trend-trade-front |
 | 8001 | trend-trade-back (web) |
+| **5002** | **reputo frontend (127.0.0.1)** |
 | **8002** | **reputo backend (127.0.0.1)** |
 
 ## API

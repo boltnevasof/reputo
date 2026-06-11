@@ -37,5 +37,15 @@ services:
       db:
         condition: service_healthy
 
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      # только на localhost: наружу сайт выходит через системный nginx сервера.
+      # 5000/5001 заняты trend-trade-front, поэтому дефолт 5002.
+      - "127.0.0.1:${FRONTEND_PORT:-5002}:80"
+    depends_on:
+      - backend
+
 volumes:
   pgdata:
