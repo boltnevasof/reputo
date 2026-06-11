@@ -68,7 +68,12 @@ img,svg{display:block}
   .sphere-bg{opacity:1 !important}
   .sphere-collapsed{display:none !important}
   .sphere-expanded{position:relative !important;opacity:1 !important;pointer-events:auto !important;min-height:430px}
+  /* при авто-высоте карточки margin-top:auto схлопывается — даём цифре явный отступ */
+  .sphere-stat{margin-top:32px !important}
 }
+
+/* lead modal: не выпадает за экран, прокручивается внутри */
+.lead-modal-card{max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto}
 
 /* reveal animation */
 .reveal{opacity:0;transform:translateY(16px)}
@@ -138,9 +143,15 @@ img,svg{display:block}
   /* dashboard — complex table layout breaks at phone width */
   .demo-window { display: none !important; }
 
-  /* audiences spheres: less padding, shorter height */
-  .sphere-expanded { padding: 22px !important; min-height: 290px !important; }
+  /* audiences spheres: less padding, height by content */
+  .sphere-expanded { padding: 24px !important; min-height: 0 !important; }
   .sphere-expanded .h3 { font-size: 20px !important; }
+  .sphere-stat { margin-top: 26px !important; }
+  .sphere-stat-num { font-size: 38px !important; }
+
+  /* lead modal: компактнее на телефоне */
+  .lead-modal-overlay { padding: 12px !important; }
+  .lead-modal-card { padding: 22px !important; max-height: calc(100dvh - 20px); }
 
   /* results metrics: smaller cells */
   .metrics-grid > div { padding: 18px 12px !important; }

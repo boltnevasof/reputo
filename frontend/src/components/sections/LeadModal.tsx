@@ -53,10 +53,12 @@ export function LeadModal({ open, onClose }: LeadModalProps) {
   };
 
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100,
+    <div onClick={onClose} className="lead-modal-overlay" style={{ position: 'fixed', inset: 0, zIndex: 100,
       background: 'rgba(14,20,36,.42)', backdropFilter: 'blur(3px)',
       display: 'grid', placeItems: 'center', padding: 20, animation: 'fadeIn .2s ease' }}>
-      <div onClick={(e) => e.stopPropagation()} className="card" style={{ width: 460, maxWidth: '100%',
+      {/* maxWidth от вьюпорта: процентный max-width в авто-колонке грида считается
+          от самой колонки и не ограничивает карточку на узких экранах */}
+      <div onClick={(e) => e.stopPropagation()} className="card lead-modal-card" style={{ width: 460, maxWidth: 'calc(100vw - 24px)',
         padding: 32, boxShadow: 'var(--shadow-lg)', animation: 'fadeUp .3s var(--ease-out)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <img src="/logo-mark.svg" alt="" style={{ width: 40, height: 40 }} />
@@ -86,7 +88,10 @@ export function LeadModal({ open, onClose }: LeadModalProps) {
               {sending ? 'Отправляем…' : 'Получить разбор'}
             </Button>
             <p style={{ fontSize: 12, color: 'var(--ink-400)', textAlign: 'center', marginTop: 14 }}>
-              Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+              Нажимая кнопку, вы соглашаетесь с{' '}
+              <a href="/privacy" target="_blank" rel="noopener" style={{ color: 'var(--ink-500)', textDecoration: 'underline' }}>
+                политикой конфиденциальности
+              </a>
             </p>
           </form>
         ) : (
@@ -126,7 +131,8 @@ function Field({ label, placeholder, value, onChange, icon, required }: FieldPro
         <input placeholder={placeholder} value={value} required={required}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
-          style={{ width: '100%', fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--ink-900)',
+          // 16px минимум: при меньшем шрифте iOS зумит страницу на фокусе, и модалка уезжает за экран
+          style={{ width: '100%', fontFamily: 'var(--font-sans)', fontSize: 16, color: 'var(--ink-900)',
             background: 'var(--surface)', border: '1px solid ' + (focus ? 'var(--brand-600)' : 'var(--line-strong)'),
             borderRadius: 'var(--r-md)', padding: icon ? '12px 14px 12px 40px' : '12px 14px', outline: 'none',
             boxShadow: focus ? 'var(--shadow-focus)' : 'none', transition: 'border-color .15s, box-shadow .15s' }} />

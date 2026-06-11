@@ -35,7 +35,27 @@ Health check бэкенда — `GET /api/health`.
 | `PROXY_URL` | прокси для Telegram API: `http://host:port` или `socks5://host:port` |
 | `PROXY_LOGIN / PROXY_PASSWORD` | авторизация прокси |
 
-## SSL через certbot (Let's Encrypt)
+## Деплой на сервер рядом с trend-trade
+
+На сервере 80/443 держит системный nginx (SSL для trend-trade), 5000/5001 занимает
+trend-trade-front, 8001 — trend-trade-back. Поэтому reputo по умолчанию слушает
+**8080** (http) и 8443 (https, не нужен при схеме ниже).
+
+Рекомендуемая схема — как у trend-trade: системный nginx терминирует SSL и
+проксирует на контейнер. Готовый конфиг — `nginx/host-server.conf.example`
+(домен, sites-enabled, `certbot --nginx`, reload). Контейнерный certbot в этой
+схеме не используется.
+
+Карта портов сервера:
+
+| Порт | Сервис |
+|---|---|
+| 80 / 443 | системный nginx |
+| 5000 / 5001 | trend-trade-front |
+| 8001 | trend-trade-back (web) |
+| **8080** | **reputo (nginx-контейнер)** |
+
+## SSL через certbot (Let's Encrypt) — для отдельного сервера
 
 ACME-челлендж уже обслуживается nginx-ом (`/.well-known/acme-challenge/` смотрит
 в общий volume `certbot-www`), сервис `certbot` описан в compose под profile

@@ -110,11 +110,11 @@ export function Audiences() {
                     ))}
                   </ul>
 
-                  <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'flex-end',
+                  <div className="sphere-stat" style={{ marginTop: 'auto', display: 'flex', alignItems: 'flex-end',
                     justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                        <span style={{ fontWeight: 300, fontSize: 46, letterSpacing: '-.03em', lineHeight: 1,
+                        <span className="sphere-stat-num" style={{ fontWeight: 300, fontSize: 46, letterSpacing: '-.03em', lineHeight: 1,
                           fontVariantNumeric: 'tabular-nums', color: '#fff' }}>{s.stat}</span>
                         {s.gold && <Icon name="star" size={22} fill style={{ color: 'var(--gold-500)' }} />}
                       </div>
